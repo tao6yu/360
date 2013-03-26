@@ -35,13 +35,13 @@ var items_id="{$items_id}";
             		<p class="item_title f14 bold"><a target="_blank" href="{:u('item/tao',array('id'=>$item['id']))}">{$item.title}</a></p>
                     <if condition="$item.price neq '0.00'">
                     <div class="clearfix" style="padding:12px 0;">
-                        <p class="fl">价格:{$item.price}元</p>
+                        <p class="fl">价&nbsp;&nbsp;&nbsp;格:<strong style="margin-top:5px;font: normal 24px Tahoma,Arial,Helvetica,sans-serif;color: #f40;"><em style="font-family: arial;color: #999;font-weight: 400;">￥</em>{$item.price}</strong>元</p>
                     </div>
                     </if>
                     <p class="p_heart">
                     	<a onclick="javascript:;" class="like_it cursor pop_comm" iid="{$item.id}"><b class="red nums" id="like_num_{$item.id}">{$item.likes}</b></a><br />
                      	<if condition="$item.price neq '0.00'">
-                        <p style="margin-top:20px;"><a target="_blank" href="{:u('item/tao',array('id'=>$item['id']))}" class="red f16">去购买&gt;&gt;</a></p>
+                        <p style="margin-top:20px;"><a target="_blank" href="{:u('item/tao',array('id'=>$item['id']))}"  class="goBuy">去购买</a></p>
                         </if>
                     </p>
                 </div>

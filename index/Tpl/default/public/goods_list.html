@@ -3,7 +3,7 @@
         <div class="item_t">
             <div class="img tc"> 
             	<a target="_blank" href="{:u('item/index',array('id'=>$val['id']))}" hidefocus="true" rel="nofollow">
-                	<img alt="{$val.title}" url="{:base64_encode($val['img'])}" style="display:inline;" class="encode_url">
+                	<img alt="{$val.title}" title="{$val.title}" url="{:base64_encode($val['img'])}" style="display:inline;" class="encode_url">
             	</a>
                 <span class="price">￥{$val.price}</span> 
                 <div class="btns">
