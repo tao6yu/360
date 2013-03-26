@@ -737,11 +737,18 @@ class itemsAction extends baseAction {
             $collect_taobao_mod = D('collect_taobao');
             $tb_top = $this->taobao_client();
             $req = $tb_top->load_api('TaobaokeItemsGetRequest');
-            $req->setFields("num_iid,title,nick,pic_url,price,click_url,shop_click_url,seller_credit_score,item_location,volume");
+            $req->setFields("num_iid,title,commission,commission_num,nick,pic_url,price,click_url,shop_click_url,seller_credit_score,item_location,volume");
             $req->setPid($this->setting['taobao_pid']);
             $req->setKeyword($keywords);
             $req->setPageNo($p);
             $req->setPageSize(40);
+            $req->setStartCredit("1diamond");
+            $req->setEndCredit("5goldencrown");
+            $req->setSort("credit_desc");
+            $req->setStartCommissionRate("200");
+            $req->setEndCommissionRate("5000");
+            $req->setStartCommissionNum("100");
+            $req->setEndCommissionNum("1000000");
             $resp = $tb_top->execute($req);
 
             $res = $this->simplexml_obj2array($resp);
@@ -757,7 +764,9 @@ class itemsAction extends baseAction {
                 $item = (array) $item;
                 $item['item_key'] = 'taobao_' . $item['num_iid'];
                 $item['sid'] = $sid;
+                if (strpos($item['title'],'男')===false) {
                 $this->_collect_insert($item, $cate_id);
+                }
             }
 
             //记录采集时间
@@ -792,6 +801,8 @@ class itemsAction extends baseAction {
         }
         $item_id = $items_mod->add(array(
             'title' => strip_tags($item['title']),
+            'commission' => $item['commission'],
+            'commission_num' => $item['commission_num'],
             'cid' => $cate_id,
             'sid' => $item['sid'],
             'item_key' => $item['item_key'],
