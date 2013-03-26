@@ -177,11 +177,18 @@ class items_collectAction extends baseAction
 
         $tb_top = $this->taobao_client();
         $req = $tb_top->load_api('TaobaokeItemsGetRequest');
-        $req->setFields("num_iid,title,nick,pic_url,price,click_url,shop_click_url,seller_credit_score,item_location,volume");
+        $req->setFields("num_iid,title,commission,commission_num,nick,pic_url,price,click_url,shop_click_url,seller_credit_score,item_location,volume");
         $req->setPid($this->setting['taobao_pid']);
         $req->setKeyword('男装');
         $req->setPageNo(1);
         $req->setPageSize(40);
+        $req->setStartCredit("1diamond");
+        $req->setEndCredit("5goldencrown");
+        $req->setSort("credit_desc");
+        $req->setStartCommissionRate("200");
+        $req->setEndCommissionRate("5000");
+        $req->setStartCommissionNum("100");
+        $req->setEndCommissionNum("1000000");
         $resp = $tb_top->execute($req);
         $goods_list = (array)$resp->taobaoke_items;
         //print_r($goods_list);exit;
@@ -193,7 +200,10 @@ class items_collectAction extends baseAction
             $item = (array)$item;
             $item['item_key'] = 'taobao_'.$item['num_iid'];
             $item['sid'] = $sid;
-            $this->_collect_insert($item, $cate_id);
+            if (strpos($item['title'], '男')===false) {
+                $this->_collect_insert($item, $cate_id);
+            }
+            
             $items_nums++;
         }
         //更新分类表商品数
@@ -227,11 +237,18 @@ class items_collectAction extends baseAction
         $collect_taobao_mod = D('collect_taobao');
         $tb_top = $this->taobao_client();
         $req = $tb_top->load_api('TaobaokeItemsGetRequest');
-        $req->setFields("num_iid,title,nick,pic_url,price,click_url,shop_click_url,seller_credit_score,item_location,volume");
+        $req->setFields("num_iid,title,commission,commission_num,nick,pic_url,price,click_url,shop_click_url,seller_credit_score,item_location,volume");
         $req->setPid($this->setting['taobao_pid']);
         $req->setKeyword($keywords);
         $req->setPageNo($p);
         $req->setPageSize(40);
+        $req->setStartCredit("1diamond");
+        $req->setEndCredit("5goldencrown");
+        $req->setSort("credit_desc");
+        $req->setStartCommissionRate("200");
+        $req->setEndCommissionRate("5000");
+        $req->setStartCommissionNum("100");
+        $req->setEndCommissionNum("1000000");
         $resp = $tb_top->execute($req);
         $goods_list = (array)$resp->taobaoke_items;
         //print_r($goods_list);exit;
@@ -243,7 +260,9 @@ class items_collectAction extends baseAction
             $item = (array)$item;
             $item['item_key'] = 'taobao_'.$item['num_iid'];
             $item['sid'] = $sid;
-            $this->_collect_insert($item, $cate_id);
+            if (strpos($item['title'], '男')===false) {
+                $this->_collect_insert($item, $cate_id);
+            }
             $items_nums++;
         }
         //更新分类表商品数
@@ -297,6 +316,8 @@ class items_collectAction extends baseAction
             'title' => strip_tags($item['title']),
             'cid' => $cate_id,
             'sid' => $item['sid'],
+            'commission' => $item['commission'],
+            'commission_num' => $item['commission_num'],
             'item_key' => $item['item_key'],
             'img' => $item['pic_url'].'_210x1000.jpg',
             'simg' => $item['pic_url'].'_64x64.jpg',
